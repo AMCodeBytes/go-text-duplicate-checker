@@ -25,5 +25,11 @@ func main() {
 }
 
 func check() {
-	fmt.Println("Check")
+	data, err := os.ReadFile("test.txt")
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(data))
 }
