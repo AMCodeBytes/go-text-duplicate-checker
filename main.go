@@ -29,9 +29,17 @@ func main() {
 
 func check() {
 	var fileName string = ""
+	var fileReadName string = ""
 	var fileLines []string
 
-	readFile, err := os.Open("test.txt")
+	fmt.Print("Enter name of text file to read from: ")
+	fmt.Scan(&fileReadName)
+
+	if fileReadName == "" {
+		panic("File name can't be empty.")
+	}
+
+	readFile, err := os.Open(fileReadName + ".txt")
 
 	if err != nil {
 		panic(err)
@@ -48,6 +56,10 @@ func check() {
 
 	fmt.Print("Enter name of text file to append: ")
 	fmt.Scan(&fileName)
+
+	if fileName == "" {
+		panic("File name can't be empty.")
+	}
 
 	file, err := os.OpenFile(fileName+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
@@ -71,10 +83,9 @@ func check() {
 	for value, ok := range textLines {
 		if ok {
 			_, err2 := file.WriteString(value + "\n")
+
 			if err2 != nil {
 				fmt.Println("Could not write text to " + fileName + ".txt")
-			} else {
-				fmt.Println("Operation successful! Text has been appended to " + fileName + ".txt")
 			}
 		}
 	}
