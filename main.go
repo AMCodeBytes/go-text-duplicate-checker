@@ -28,13 +28,8 @@ func main() {
 }
 
 func check() {
-	// data, err := os.ReadFile("test.txt")
-
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// fmt.Println(string(data))
+	var fileName string = ""
+	var fileLines []string
 
 	readFile, err := os.Open("test.txt")
 
@@ -44,7 +39,6 @@ func check() {
 
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
-	var fileLines []string
 
 	for fileScanner.Scan() {
 		fileLines = append(fileLines, fileScanner.Text())
@@ -52,6 +46,18 @@ func check() {
 
 	defer readFile.Close()
 
+	fmt.Print("Enter name of text file to append: ")
+	fmt.Scan(&fileName)
+
+	file, err := os.OpenFile(fileName+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+
+	// Filter the lines from the read file
 	for _, line := range fileLines {
 		// fmt.Println(line)
 		if !duplicateCheck(line) {
@@ -60,6 +66,18 @@ func check() {
 	}
 
 	fmt.Println(textLines)
+
+	// Insert the filtered lines into a new file
+	for value, ok := range textLines {
+		if ok {
+			_, err2 := file.WriteString(value + "\n")
+			if err2 != nil {
+				fmt.Println("Could not write text to " + fileName + ".txt")
+			} else {
+				fmt.Println("Operation successful! Text has been appended to " + fileName + ".txt")
+			}
+		}
+	}
 }
 
 func duplicateCheck(text string) bool {
