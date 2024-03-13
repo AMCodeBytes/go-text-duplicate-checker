@@ -77,8 +77,6 @@ func check() {
 		}
 	}
 
-	fmt.Println(textLines)
-
 	// Insert the filtered lines into a new file
 	for value, ok := range textLines {
 		if ok {
